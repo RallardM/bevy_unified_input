@@ -1,3 +1,8 @@
+//!  Unified input for Bevy
+//!
+//!  Mostly useful for libraries that want to support keyboard, mouse and gamepad input
+//!
+
 use bevy::{
     input::{gamepad::GamepadButton, keyboard::KeyCode, mouse::MouseButton},
     prelude::*,
@@ -9,6 +14,7 @@ pub enum InputKind {
     Mouse(MouseButton),
     Gamepad(GamepadButton),
 }
+
 impl InputKind {
     pub fn is_key_pressed(&self, keys: &ButtonInput<KeyCode>) -> bool {
         self.key().map(|key| keys.pressed(key)).unwrap_or_default()
