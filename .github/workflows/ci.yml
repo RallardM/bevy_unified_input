@@ -35,6 +35,11 @@ jobs:
       - name: Cache crates
         uses: Swatinem/rust-cache@v2
 
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends libudev-dev libwayland-dev
+
       - name: Install Taplo
         run: cargo install --locked taplo-cli
 
@@ -53,7 +58,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends libudev-dev
+          sudo apt-get install --no-install-recommends libudev-dev libwayland-dev
 
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -79,7 +84,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends libudev-dev
+          sudo apt-get install --no-install-recommends libudev-dev libwayland-dev
 
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
