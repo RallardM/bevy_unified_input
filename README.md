@@ -1,6 +1,6 @@
 # bevy_unified_input
 
-Ever wanted to bind multiple inputs at a time? A unified input primitives is just a thing
+Ever wanted to bind multiple inputs at a time? A unified input primitives is just the thing
 
 
 ## License
