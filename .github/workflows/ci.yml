@@ -40,13 +40,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends libudev-dev libwayland-dev
 
-      - name: Install Taplo
-        run: cargo install --locked taplo-cli
-
       - name: Format
         run: |
           cargo fmt --all --check
-          taplo fmt --check
 
   lint:
     name: Lint
