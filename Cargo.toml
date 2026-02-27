@@ -1,0 +1,24 @@
+[package]
+name = "bevy_unified_input"
+version = "0.1.0"
+authors = ["Oleks Pickle <22867443+olekspickle@users.noreply.github.com>"]
+description = "A unified input primitives"
+keywords = ["bevy", "inoput"]
+categories = ["game-development"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/olekspickle/bevy_unified_input"
+homepage = "https://github.com/olekspickle/bevy_unified_input"
+readme = "README.md"
+edition = "2024"
+
+[dependencies]
+bevy = { version = "0.18", default-features = false, features = [ "bevy_winit", "bevy_render", "wayland" ] }
+
+[dev-dependencies.bevy]
+version = "0.18"
+default-features = false
+features = [ "3d_bevy_render", "ui_bevy_render", "wayland", "debug", "default_font"  ]
+
+[dev-dependencies]
+bevy_top_down_camera = "0.3.1"
+
