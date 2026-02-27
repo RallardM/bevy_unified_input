@@ -3,10 +3,8 @@
 //!  Mostly useful for libraries that want to support keyboard, mouse and gamepad input
 //!
 
-use bevy::{
-    input::{gamepad::GamepadButton, keyboard::KeyCode, mouse::MouseButton},
-    prelude::*,
-};
+use bevy_ecs::prelude::*;
+use bevy_input::{gamepad::GamepadButton, keyboard::KeyCode, mouse::MouseButton, prelude::*};
 
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum InputKind {
