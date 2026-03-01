@@ -67,6 +67,8 @@ fn spawn_world(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
+    commands.insert_resource(MyInput::default());
+
     commands.spawn((
         Mesh3d(meshes.add(Plane3d::default().mesh().size(50.0, 50.0))),
         MeshMaterial3d(materials.add(Color::srgb(0.11, 0.27, 0.16))),
@@ -147,7 +149,7 @@ fn actions(
     }
 
     let follow = keys
-        .map(|keys| my_input.follow_camera.pressed_key(&keys))
+        .map(|keys| my_input.follow_camera.just_pressed_key(&keys))
         .unwrap_or_default();
 
     if follow {
