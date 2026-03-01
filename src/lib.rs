@@ -7,6 +7,29 @@ use bevy_ecs::prelude::*;
 use bevy_input::{gamepad::GamepadButton, keyboard::KeyCode, mouse::MouseButton, prelude::*};
 use std::hash::Hash;
 
+/// A binding of multiple [`InputKind`]s
+///
+/// # Example
+/// ```rust,no_run
+/// use bevy::prelude::*;
+/// use bevy_unified_input::*;
+///
+/// #[derive(Resource)]
+/// struct MyInput {
+///     speed_up_timeline: InputBinding,
+///     slow_down_timeline: InputBinding,
+/// }
+///
+/// impl Default for MyInput {
+///     fn default() -> Self {
+///         Self {
+///             speed_up_timeline: [KeyCode::KeyX.into(), GamepadButton::DPadRight.into()].into(),
+///             slow_down_timeline: [KeyCode::KeyZ.into(), GamepadButton::DPadLeft.into()].into(),
+///         }
+///     }
+/// }
+///
+/// ```
 #[derive(Debug, Clone, Default)]
 pub struct InputBinding(pub Vec<InputKind>);
 
@@ -41,7 +64,7 @@ impl InputBinding {
         self.0.iter().any(|i| i.just_released_gamepad(gamepad))
     }
 
-    pub fn any_pressed(
+    pub fn pressed_any(
         &self,
         keys: Option<&Res<ButtonInput<KeyCode>>>,
         mouse: Option<&Res<ButtonInput<MouseButton>>>,
@@ -50,7 +73,7 @@ impl InputBinding {
         self.0.iter().any(|i| i.pressed_any(keys, mouse, gamepad))
     }
 
-    pub fn is_any_just_pressed(
+    pub fn just_pressed_any(
         &self,
         keys: Option<&Res<ButtonInput<KeyCode>>>,
         mouse: Option<&Res<ButtonInput<MouseButton>>>,
@@ -61,7 +84,7 @@ impl InputBinding {
             .any(|i| i.just_pressed_any(keys, mouse, gamepad))
     }
 
-    pub fn is_any_just_released(
+    pub fn just_released_any(
         &self,
         keys: Option<&Res<ButtonInput<KeyCode>>>,
         mouse: Option<&Res<ButtonInput<MouseButton>>>,
@@ -81,27 +104,6 @@ pub enum InputKind {
 }
 
 impl InputKind {
-    pub fn keys(&self) -> Option<KeyCode> {
-        match self {
-            InputKind::Key(key) => Some(*key),
-            _ => None,
-        }
-    }
-
-    pub fn mouse(&self) -> Option<MouseButton> {
-        match self {
-            InputKind::Mouse(btn) => Some(*btn),
-            _ => None,
-        }
-    }
-
-    pub fn gamepad(&self) -> Option<GamepadButton> {
-        match self {
-            InputKind::Gamepad(btn) => Some(*btn),
-            _ => None,
-        }
-    }
-
     pub fn pressed_key(&self, keys: &ButtonInput<KeyCode>) -> bool {
         matches!(self, InputKind::Key(k) if keys.pressed(*k))
     }

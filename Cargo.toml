@@ -21,7 +21,7 @@ default-features = false
 features = [ "3d_bevy_render", "ui_bevy_render", "wayland", "debug", "default_font"  ]
 
 [dev-dependencies]
-bevy_top_down_camera = "0.3.1"
+bevy_top_down_camera = "0.3"
 
 [features]
 default = []

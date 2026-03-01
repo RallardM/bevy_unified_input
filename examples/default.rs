@@ -41,11 +41,11 @@ fn spawn_camera(mut commands: Commands) {
 
 #[derive(Resource)]
 struct MyInput {
-    forward: InputKind,
-    backward: InputKind,
-    left: InputKind,
-    right: InputKind,
-    follow_camera: InputKind,
+    forward: InputBinding,
+    backward: InputBinding,
+    left: InputBinding,
+    right: InputBinding,
+    follow_camera: InputBinding,
 }
 
 // This is purely for demonstration purposes,
@@ -53,11 +53,11 @@ struct MyInput {
 impl Default for MyInput {
     fn default() -> Self {
         Self {
-            forward: KeyCode::KeyW.into(),
-            backward: KeyCode::KeyS.into(),
-            left: KeyCode::KeyA.into(),
-            right: KeyCode::KeyD.into(),
-            follow_camera: KeyCode::KeyF.into(),
+            forward: [KeyCode::KeyW.into(), GamepadButton::DPadUp.into()].into(),
+            backward: [KeyCode::KeyS.into(), GamepadButton::DPadDown.into()].into(),
+            left: [KeyCode::KeyA.into(), GamepadButton::DPadLeft.into()].into(),
+            right: [KeyCode::KeyD.into(), GamepadButton::DPadRight.into()].into(),
+            follow_camera: [KeyCode::KeyF.into(), GamepadButton::Start.into()].into(),
         }
     }
 }
@@ -110,8 +110,8 @@ fn spawn_ui(mut commands: Commands) {
 
 fn actions(
     time: Res<Time>,
-    keys: Res<ButtonInput<KeyCode>>,
-    gamepad: Res<ButtonInput<GamepadButton>>,
+    keys: Option<Res<ButtonInput<KeyCode>>>,
+    gamepad: Option<Res<ButtonInput<GamepadButton>>>,
     my_input: Res<MyInput>,
     mut cam_q: Query<&mut TopDownCamera>,
     mut player_q: Query<&mut Transform, With<Player>>,
@@ -119,10 +119,18 @@ fn actions(
     let mut direction = Vec3::ZERO;
 
     let (forward, backward, left, right) = (
-        my_input.forward.is_key_pressed(&keys) || my_input.forward.is_gamepad_pressed(&gamepad),
-        my_input.backward.is_key_pressed(&keys) || my_input.backward.is_gamepad_pressed(&gamepad),
-        my_input.left.is_key_pressed(&keys) || my_input.left.is_gamepad_pressed(&gamepad),
-        my_input.right.is_key_pressed(&keys) || my_input.right.is_gamepad_pressed(&gamepad),
+        my_input
+            .forward
+            .pressed_any(keys.as_ref(), None, gamepad.as_ref()),
+        my_input
+            .backward
+            .pressed_any(keys.as_ref(), None, gamepad.as_ref()),
+        my_input
+            .left
+            .pressed_any(keys.as_ref(), None, gamepad.as_ref()),
+        my_input
+            .right
+            .pressed_any(keys.as_ref(), None, gamepad.as_ref()),
     );
 
     if forward {
@@ -138,7 +146,11 @@ fn actions(
         direction.x += 1.0;
     }
 
-    if my_input.follow_camera.is_key_pressed(&keys) {
+    let follow = keys
+        .map(|keys| my_input.follow_camera.pressed_key(&keys))
+        .unwrap_or_default();
+
+    if follow {
         let Ok(mut cam) = cam_q.single_mut() else {
             return;
         };
