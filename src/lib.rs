@@ -5,6 +5,11 @@
 
 use bevy_ecs::prelude::*;
 use bevy_input::{gamepad::GamepadButton, keyboard::KeyCode, mouse::MouseButton, prelude::*};
+use std::hash::Hash;
+
+pub trait IsPressed<V: Sync + Send + Hash + Eq + Clone> {
+    fn is_pressed(&self, value: ButtonInput<V>) -> bool;
+}
 
 #[derive(Component, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum InputKind {
@@ -14,22 +19,6 @@ pub enum InputKind {
 }
 
 impl InputKind {
-    pub fn is_key_pressed(&self, keys: &ButtonInput<KeyCode>) -> bool {
-        self.key().map(|key| keys.pressed(key)).unwrap_or_default()
-    }
-
-    pub fn is_mouse_pressed(&self, mouse: &ButtonInput<MouseButton>) -> bool {
-        self.mouse()
-            .map(|btn| mouse.pressed(btn))
-            .unwrap_or_default()
-    }
-
-    pub fn is_gamepad_pressed(&self, gamepad: &ButtonInput<GamepadButton>) -> bool {
-        self.gamepad()
-            .map(|btn| gamepad.pressed(btn))
-            .unwrap_or_default()
-    }
-
     pub fn key(&self) -> Option<KeyCode> {
         match self {
             InputKind::Key(key) => Some(*key),
@@ -49,6 +38,28 @@ impl InputKind {
             InputKind::Gamepad(btn) => Some(*btn),
             _ => None,
         }
+    }
+}
+
+impl IsPressed<KeyCode> for InputKind {
+    fn is_pressed(&self, value: ButtonInput<KeyCode>) -> bool {
+        self.key().map(|key| value.pressed(key)).unwrap_or_default()
+    }
+}
+
+impl IsPressed<MouseButton> for InputKind {
+    fn is_pressed(&self, value: ButtonInput<MouseButton>) -> bool {
+        self.mouse()
+            .map(|btn| value.pressed(btn))
+            .unwrap_or_default()
+    }
+}
+
+impl IsPressed<GamepadButton> for InputKind {
+    fn is_pressed(&self, value: ButtonInput<GamepadButton>) -> bool {
+        self.gamepad()
+            .map(|btn| value.pressed(btn))
+            .unwrap_or_default()
     }
 }
 
