@@ -16,7 +16,8 @@ bevy_input = { path = "../bevy/crates/bevy_input", features = ["gamepad", "mouse
 bevy_ecs = { path = "../bevy/crates/bevy_ecs" , default-features = false }
 
 [dev-dependencies.bevy]
-path = "../bevy/"
+# path = "../bevy/"
+version = "0.18.0"
 default-features = false
 features = [ "3d_bevy_render", "ui_bevy_render", "wayland", "debug", "default_font"  ]
 
